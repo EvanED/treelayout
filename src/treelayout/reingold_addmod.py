@@ -1,4 +1,3 @@
-from gen import Tree, gentree
 from operator import lt, gt
 from sys import stdout, maxint
 minint = -maxint - 1
