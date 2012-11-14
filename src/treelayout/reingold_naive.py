@@ -35,7 +35,7 @@ def reingold_tilford(tree, depth=0):
 def fix_subtrees(left, right):
     wl = contour(left, lt)
     wr = contour(right, gt)
-    diff = max(map(lambda (x,y): x-y, zip(wl,wr))) + 1
+    diff = max(map(lambda xy: xy[0]-xy[1], zip(wl,wr))) + 1
     #stick to the integers
     diff += (right.x + diff + left.x) % 2
     addtotree(right, diff)

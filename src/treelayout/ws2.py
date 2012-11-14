@@ -31,7 +31,7 @@ def setup(tree, depth=0, nexts=None, offset=None):
         place = tree.children[0].x - 1
     else:
         s = (tree.children[0].x + tree.children[1].x)
-        print tree.children[0].x, tree.children[1].x, tree.tree
+        print(tree.children[0].x, tree.children[1].x, tree.tree)
         place = s / 2
 
     offset[depth] = max(offset[depth], nexts[depth]-place)
