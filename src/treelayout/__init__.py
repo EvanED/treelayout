@@ -1,12 +1,12 @@
-import buchheim
-import knuth
-import reingold_actual
-import reingold_addmod
-import reingold_naive
-import reingold_thread
-import walker
-import ws1
-import ws2
+from . import buchheim
+from . import knuth
+from . import reingold_actual
+from . import reingold_addmod
+from . import reingold_naive
+from . import reingold_thread
+from . import walker
+from . import ws1
+from . import ws2
 
 buchheim = buchheim.buchheim
 knuth = knuth.layout

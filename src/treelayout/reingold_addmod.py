@@ -1,6 +1,5 @@
 from operator import lt, gt
-from sys import stdout, maxint
-minint = -maxint - 1
+from sys import stdout
 
 class DrawTree:
     def __init__(self, tree, depth=-1):
