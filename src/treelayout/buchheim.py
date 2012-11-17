@@ -42,20 +42,25 @@ class DrawTree(object):
     def __str__(self): return "%s: x=%s mod=%s" % (self.tree, self.x, self.mod)
     def __repr__(self): return self.__str__()
 
+
 def buchheim(tree):
     dt = firstwalk(DrawTree(tree))
-    min = second_walk(dt)
+    min = shift_subtrees_right_by_mod(dt)
     if min < 0:
-        third_walk(dt, -min)
+        shift_entire_tree_right(dt, -min)
     return dt
 
-def third_walk(tree, n):
+
+def shift_entire_tree_right(tree, n):
     tree.x += n
     for c in tree.children:
-        third_walk(c, n)
+        shift_entire_tree_right(c, n)
+
 
 def firstwalk(v, distance=1.):
     if len(v.children) == 0:
+        # Base case. This node starts a bit to the right of its left
+        # sibling, or at x=0 if there isn't one.
         if v.lmost_sibling:
             v.x = v.lbrother().x + distance
         else:
@@ -79,6 +84,7 @@ def firstwalk(v, distance=1.):
         else:
             v.x = midpoint
     return v
+
 
 def apportion(v, default_ancestor, distance):
     w = v.lbrother()
@@ -116,6 +122,7 @@ def apportion(v, default_ancestor, distance):
             default_ancestor = v
     return default_ancestor
 
+
 def move_subtree(wl, wr, shift):
     subtrees = wr.number - wl.number
     print(wl.tree, "is conflicted with", wr.tree, 'moving', subtrees, 'shift', shift)
@@ -126,6 +133,7 @@ def move_subtree(wl, wr, shift):
     wr.x += shift
     wr.mod += shift
 
+
 def execute_shifts(v):
     shift = change = 0
     for w in v.children[::-1]:
@@ -135,16 +143,29 @@ def execute_shifts(v):
         change += w.change
         shift += w.shift + change
 
+
 def ancestor(vil, v, default_ancestor):
-    #the relevant text is at the bottom of page 7 of
-    #"Improving Walker's Algorithm to Run in Linear Time" by Buchheim et al, (2002)
-    #http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.16.8757&rep=rep1&type=pdf
+    # The relevant text is at the bottom of page 7 of "Improving
+    # Walker's Algorithm to Run in Linear Time" by Buchheim et al,
+    # (2002)
+    # http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.16.8757&rep=rep1&type=pdf
     if vil.ancestor in v.parent.children:
         return vil.ancestor
     else:
         return default_ancestor
 
-def second_walk(v, m=0, depth=0, min=None):
+
+def shift_subtrees_right_by_mod(v, m=0, depth=0, min=None):
+    """This function shifts a subtree rooted at v right by v.mod
+    units.
+
+    This means every node is shifted right by the sum of all .mod
+    attributes on all ancestors.
+
+    As an unrelated behavior (included to remove the need for yet
+    another pass), computes and returns the minimum x coordinate found
+    in the tree (after adjustment).
+    """
     v.x += m
     v.y = depth
 
@@ -152,7 +173,7 @@ def second_walk(v, m=0, depth=0, min=None):
         min = v.x
 
     for w in v.children:
-        min = second_walk(w, m + v.mod, depth+1, min)
+        min = shift_subtrees_right_by_mod(w, m + v.mod, depth+1, min)
 
     return min
 
