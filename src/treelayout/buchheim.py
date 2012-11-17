@@ -18,10 +18,10 @@ class DrawTree(object):
         #this is the number of the node in its group of siblings 1..n
         self.number = number
 
-    def left(self): 
+    def leftmost_child(self): 
         return self.thread or len(self.children) and self.children[0]
 
-    def right(self):
+    def rightmost_child(self):
         return self.thread or len(self.children) and self.children[-1]
 
     def lbrother(self):
@@ -91,11 +91,11 @@ def apportion(v, default_ancestor, distance):
         sir = sor = v.mod
         sil = vil.mod
         sol = vol.mod
-        while vil.right() and vir.left():
-            vil = vil.right()
-            vir = vir.left()
-            vol = vol.left()
-            vor = vor.right()
+        while vil.rightmost_child() and vir.leftmost_child():
+            vil = vil.rightmost_child()
+            vir = vir.leftmost_child()
+            vol = vol.leftmost_child()
+            vor = vor.righmost_childt()
             vor.ancestor = v
             shift = (vil.x + sil) - (vir.x + sir) + distance
             if shift > 0:
@@ -106,12 +106,12 @@ def apportion(v, default_ancestor, distance):
             sir += vir.mod
             sol += vol.mod
             sor += vor.mod
-        if vil.right() and not vor.right():
-            vor.thread = vil.right()
+        if vil.rightmost_child() and not vor.rightmost_child():
+            vor.thread = vil.rightmost_child()
             vor.mod += sil - sor
         else:
-            if vir.left() and not vol.left():
-                vol.thread = vir.left()
+            if vir.leftmost_child() and not vol.leftmost_child():
+                vol.thread = vir.leftmost_child()
                 vol.mod += sir - sol
             default_ancestor = v
     return default_ancestor
